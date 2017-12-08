@@ -33,7 +33,7 @@ import yaml
 #
 # TYPE-1: default one
 # If all three repos are in one folder, please adjust `WORKING_PATH` only.
-WORKING_PATH = "/home/joy/Work"
+WORKING_PATH = "/home/lizhong/work2017"
 PLUGIN_PATH = os.path.join(WORKING_PATH,
                            "insights-plugins/telemetry/rules/plugins")
 CONTENT_PATH = os.path.join(WORKING_PATH, "insights-content/content")
@@ -242,12 +242,19 @@ def get_playbook_structure(path):
         if len(root_split) < 2:
             continue
         root_split = root_split[1].split('/')
-        if len(root_split) < 4:
+
+        if len(root_split) == 4:
+            prod_role = root_split[-1]
+            ek = root_split[-2]
+            plugin_name = root_split[-3]
+            domain = '/'.join(root_split[0:-3])
+        elif len(root_split) == 3:
+            prod_role = "osp_controller"    # for readme playbook does not have the role, set the default.
+            ek = root_split[-1]
+            plugin_name = root_split[-2]
+            domain = '/'.join(root_split[0])
+        else:
             continue
-        prod_role = root_split[-1]
-        ek = root_split[-2]
-        plugin_name = root_split[-3]
-        domain = '/'.join(root_split[0:-3])
 
         plugin_info = playbook_collections.setdefault(plugin_name, {})
         plugin_info["relative_path"] = domain
